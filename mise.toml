@@ -1,0 +1,27 @@
+[tools]
+go = "1.27"
+
+[tasks.build]
+description = "Build all packages"
+run = "go build ./..."
+
+[tasks.test]
+description = "Run the test suite"
+run = "go test ./..."
+
+[tasks.vet]
+description = "Run go vet"
+run = "go vet ./..."
+
+[tasks.fmt]
+description = "Format all Go source"
+run = "gofmt -l -w ."
+
+[tasks.check]
+description = "Format check, vet and test"
+depends = ["vet", "test"]
+run = "test -z \"$(gofmt -l .)\" || { echo 'unformatted files:'; gofmt -l .; exit 1; }"
+
+[tasks.smoke]
+description = "Live read-only smoke test against the real API, needs FASTMAIL_TOKEN"
+run = "go test -tags=live -run TestLive -v -count=1 ."
